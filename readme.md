@@ -31,6 +31,11 @@ ENRE has integrated type inference technique and type stub files (one of type hi
 You can learn more about this fresh feature and experience it by diving into the **[ENRE-v2.0](https://github.com/jinwuxia/ENRE/tree/v2.0)**. 
 
 
+## Features under development
+
+We are improving ENRE to support analyzing JAVA and CPP languages. We are also updating ENRE-python by using Python AST library. 
+We plan to publish these features at the end of 2022 YEAR.
+
 # Usage
 ###  1)Prepare the executable jar
 The released jar of ENRE is named as **ENRE-v1.0.jar**.
