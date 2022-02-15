@@ -33,7 +33,7 @@ You can learn more about this fresh feature and experience it by diving into the
 
 ## Features under development
 
-We are improving ENRE to support analyzing JAVA and CPP languages. We are also updating ENRE-python by using Python AST library. 
+We are improving ENRE to support analyzing **JAVA** and **CPP** languages. We are also updating **ENRE-python** by using Python AST library. 
 We plan to publish these features at the end of 2022 YEAR.
 
 # Usage
