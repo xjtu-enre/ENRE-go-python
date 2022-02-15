@@ -28,7 +28,7 @@ ENRE has integrated type inference technique and type stub files (one of type hi
 
 **Possible Dependencies** are the syntactic dependencies indiscernible in source code due to the lack of explicit type references, in contrast with  **Explicit Dependencies**.
 
-You can learn more about this fresh feature and experience it by diving into the **[ENRE-v2.0](https://github.com/jinwuxia/ENRE/tree/v2.0)**. 
+You can learn more about this fresh feature and experience it by diving into the **[ENRE-v2.0](https://github.com/xjtu-enre/ENRE-go-python/tree/v2.0)**. 
 
 
 ## Features under development
