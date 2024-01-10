@@ -1,5 +1,6 @@
 package client;
 
+import formator.fjson.NewJDepObject;
 import formator.spreadsheet.Csvgrapher;
 import priextractor.AnayzerIntf;
 import entitybuilder.BuilderIntf;
@@ -61,7 +62,11 @@ public class TemplateWork {
         Formator formator = new Formator(depTypes);
         JDepObject jDepObject = formator.getfJsonDataModel();
         XDepObject xDepObject = formator.getfXmlDataModel();
+        // update2
 
+        NewJDepObject newJDepObject = formator.getfNewJsonDataModel();
+
+        // end
         Csvgrapher csvgrapher = new Csvgrapher();
         csvgrapher.buildProcess();
         ArrayList<String[]> allNodes = csvgrapher.getNodes();
@@ -69,6 +74,10 @@ public class TemplateWork {
 
         WriterIntf writer = new WriterIntf();
         writer.run(jDepObject, xDepObject, allNodes, allEdges);
+
+        // update2
+        writer.run(newJDepObject);
+        // end
 
         //output the summary of the acquired results.
         summary();

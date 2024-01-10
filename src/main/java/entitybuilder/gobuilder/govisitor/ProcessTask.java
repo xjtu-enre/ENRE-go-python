@@ -1,5 +1,6 @@
 package entitybuilder.gobuilder.govisitor;
 
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import parser.parsego.GolangParser;
 import entitybuilder.gobuilder.GoConstantString;
 import uerr.*;
@@ -21,6 +22,8 @@ public class ProcessTask {
     SingleCollect singleCollect = SingleCollect.getSingleCollectInstance();
     Configure configure = Configure.getConfigureInstance();
     ContextHelper helperVisitor = new ContextHelper();
+
+
 
 
     public AbsVAREntity getReceiver(String receiverStr) {
@@ -93,11 +96,18 @@ public class ProcessTask {
      * @param name
      * @return
      */
-    public int processInterfaceFieldAsType(String type, String name) {
+    // update
+    public int processInterfaceFieldAsType(String type, String name,GolangParser.MethodSpecContext ctx) {
         InterfaceFieldEntity interfaceFieldEntity = new InterfaceFieldEntity(type, name);
         int fieldIndex = singleCollect.getCurrentIndex();
         interfaceFieldEntity.setId(fieldIndex);
         interfaceFieldEntity.setParentId(-1);
+
+        // update
+        interfaceFieldEntity.setStart(ctx.getStart());
+        interfaceFieldEntity.setEnd(ctx.getStop());
+        // end
+
         singleCollect.addEntity(interfaceFieldEntity);
         return fieldIndex;
     }
@@ -113,7 +123,8 @@ public class ProcessTask {
      * @param methodSignatureReturns
      * @return
      */
-    public int processInterfaceFieldAsMethod(String type, String name, String methodSignatureParas, String methodSignatureReturns) {
+    // update
+    public int processInterfaceFieldAsMethod(String type, String name, String methodSignatureParas, String methodSignatureReturns,GolangParser.MethodSpecContext ctx) {
         ArrayList<AbsVAREntity> parameters = getVarFromParameters(methodSignatureParas);
         ArrayList<AbsVAREntity> returns = getVarFromParameters(methodSignatureReturns);
 
@@ -121,6 +132,12 @@ public class ProcessTask {
         int fieldIndex = singleCollect.getCurrentIndex();
         interfaceFieldEntity.setId(fieldIndex);
         interfaceFieldEntity.setParentId(-1);
+
+        // update
+        interfaceFieldEntity.setStart(ctx.getStart());
+        interfaceFieldEntity.setEnd(ctx.getStop());
+        // end
+
         singleCollect.addEntity(interfaceFieldEntity);
         return fieldIndex;
     }
@@ -134,10 +151,17 @@ public class ProcessTask {
      * @param fieldName
      * @return
      */
-    public int processStructFieldAsNormal(String fieldType, String fieldName) {
+    // update
+    public int processStructFieldAsNormal(String fieldType, String fieldName,TerminalNode node) {
         int fieldIndex = singleCollect.getCurrentIndex();
         StructFieldEntity structFieldEntity = new StructFieldEntity(fieldIndex, fieldType, fieldName);
         structFieldEntity.setParentId(-1);
+
+        // update
+        structFieldEntity.setStart(node.getSymbol());
+        structFieldEntity.setEnd(node.getSymbol());
+        // end
+
         singleCollect.addEntity(structFieldEntity);
         return fieldIndex;
     }
@@ -151,25 +175,44 @@ public class ProcessTask {
      * @param fieldName
      * @return
      */
-    public int processStructFieldAsAnonymous(String fieldType, String fieldName) {
+    // update
+    public int processStructFieldAsAnonymous(String fieldType, String fieldName,GolangParser.FieldDeclContext ctx) {
         int fieldIndex = singleCollect.getCurrentIndex();
         StructFieldEntity structFieldEntity = new StructFieldEntity(fieldIndex, fieldType, fieldName);
         structFieldEntity.setParentId(-1);
+
+        // update
+        structFieldEntity.setStart(ctx.getStart());
+        structFieldEntity.setEnd(ctx.getStop());
+        // end
+
         singleCollect.addEntity(structFieldEntity);
         return fieldIndex;
     }
 
-
+    // update
     public void processTypeSpec(GolangParser.TypeSpecContext ctx, String type, ArrayList<Integer> tmpEntitiesIds, int fileIndex) {
         String name = ctx.IDENTIFIER().getText();
         //System.out.println("operateTypeSpec: " + name);
         AbsEntity entity = null;
         if (type.equals(GoConstantString.STRUCT_TYPE)) {
             entity = new StructEntity(singleCollect.getCurrentIndex(), name);
+
+            // update
+            entity.setStart(ctx.getStart());
+            entity.setEnd(ctx.getStop());
+            // end
+
             singleCollect.addEntity(entity);
             //System.out.println("operateTypeSpec1: " + name);
         } else if (type.equals(GoConstantString.INTERFACE_TYPE)) {
             entity = new InterfaceEntity(singleCollect.getCurrentIndex(), name);
+
+            // update
+            entity.setStart(ctx.getStart());
+            entity.setEnd(ctx.getStop());
+            // end
+
             singleCollect.addEntity(entity);
         }
 
@@ -201,10 +244,17 @@ public class ProcessTask {
      * @param type
      * @param name
      */
-    public void processAliasType(int fileIndex, String type, String name) {
+    // update
+    public void processAliasType(int fileIndex, String type, String name,GolangParser.TypeSpecContext ctx) {
         int entityIndex = singleCollect.getCurrentIndex();
         AliasTypeEntity aliasTypeEntity = new AliasTypeEntity(entityIndex, type, name);
         aliasTypeEntity.setParentId(fileIndex);
+
+        // update
+        aliasTypeEntity.setStart(ctx.getStart());
+        aliasTypeEntity.setEnd(ctx.getStop());
+        // end
+
         singleCollect.addEntity(aliasTypeEntity);
         singleCollect.getEntities().get(fileIndex).addChildId(entityIndex);
     }
@@ -215,12 +265,21 @@ public class ProcessTask {
      * @param varSpecContext
      * @param type
      */
+    // update
     public void processVarDeclInFile(GolangParser.VarSpecContext varSpecContext, String type, int fileIndex) {
         //get name of var
         for (TerminalNode node : varSpecContext.identifierList().IDENTIFIER()) {
             AbsVAREntity varEntity = new AbsVAREntity(singleCollect.getCurrentIndex(), type, node.getText());
             varEntity.setParentId(fileIndex);
+            System.out.println(node.getText());
+
             varEntity.setLocalBlockId(fileIndex);
+
+            // update
+            varEntity.setStart(node.getSymbol());
+            varEntity.setEnd(node.getSymbol());
+            // end
+
             singleCollect.addEntity(varEntity);
             singleCollect.getEntities().get(fileIndex).addChildId(varEntity.getId());
         }
@@ -232,11 +291,18 @@ public class ProcessTask {
      * process constVar in file scope
      * @param ctx
      */
+    // update
     public void processConstInFile(GolangParser.ConstSpecContext ctx, String type, int fileIndex) {
         for (TerminalNode terminalNode : ctx.identifierList().IDENTIFIER()) {
             ConstEntity constEntity = new ConstEntity(singleCollect.getCurrentIndex(), type, terminalNode.getText());
             constEntity.setParentId(fileIndex);
             constEntity.setLocalBlockId(fileIndex);
+
+            // update
+            constEntity.setStart(terminalNode.getSymbol());
+            constEntity.setEnd(terminalNode.getSymbol());
+            // end
+
             singleCollect.addEntity(constEntity);
             singleCollect.getEntities().get(fileIndex).addChildId(constEntity.getId());
         }
@@ -358,13 +424,16 @@ public class ProcessTask {
     }
 
 
-    public void processImport(String importNameAndPath, int fileIndex){
+    // update
+    public void processImport(String importNameAndPath, int fileIndex,GolangParser.ImportSpecContext importSpecContext){
         String[] tmp = importNameAndPath.split(Configure.SEMI_COLON);
         String importName = tmp[0];
         String importPath = tmp[1];
         importPath = importPath.substring(1, importPath.length() - 1); //delete " and "
         ((AbsFILEntity) singleCollect.getEntities().get(fileIndex)).addImport(
                 new Tuple<String, String>(importName, importPath));
+        ((AbsFILEntity) singleCollect.getEntities().get(fileIndex)).setStart(importSpecContext.getStart());
+        ((AbsFILEntity) singleCollect.getEntities().get(fileIndex)).setEnd(importSpecContext.getStop());
     }
 
 
@@ -392,6 +461,7 @@ public class ProcessTask {
      * @param value
      * @param functionIndex
      */
+    // update
     public void processVarInFunction(TerminalNode node, String type, String value, int functionIndex, int localBlockId) {
         String name = node.getText();
         if(name.equals(Configure.BLANK_IDENTIFIER) || name.equals(GoConstantString.NIL)) {
@@ -405,6 +475,12 @@ public class ProcessTask {
         varEntity.setValue(value);
         varEntity.setParentId(functionIndex);
         varEntity.setLocalBlockId(localBlockId);
+
+        // update
+        varEntity.setStart(node.getSymbol());
+        varEntity.setEnd(node.getSymbol());
+        // end
+
         singleCollect.addEntity(varEntity);
         singleCollect.getEntities().get(functionIndex).addChildId(varEntity.getId());
 
@@ -419,7 +495,8 @@ public class ProcessTask {
      * @param leftOperands
      * @param rightExps
      */
-    public void processShortDeclVarInFunction(String leftOperands, String rightExps, int functionIndex, int localBlockId) {
+    // update
+    public void processShortDeclVarInFunction(String leftOperands, String rightExps, int functionIndex, int localBlockId,GolangParser.ShortVarDeclContext ctx) {
         String[] leftNames = leftOperands.split(Configure.COMMA);
         String[] rightValues = rightExps.split(Configure.COMMA);
         for (int i = 0; i < leftNames.length; i++) {
@@ -442,6 +519,12 @@ public class ProcessTask {
             varEntity.setValue(value);
             varEntity.setParentId(functionIndex);
             varEntity.setLocalBlockId(localBlockId);
+
+            // start
+            varEntity.setStart(ctx.getStart());
+            varEntity.setEnd(ctx.getStop());
+            // end
+
             singleCollect.addEntity(varEntity);
             singleCollect.getEntities().get(functionIndex).addChildId(varEntity.getId());
         }
@@ -454,11 +537,18 @@ public class ProcessTask {
      * process constVar in function scope
      * @param ctx
      */
+    // update
     public void processConstInFunction(GolangParser.ConstSpecContext ctx, String type, int functionIndex, int localBlockId) {
         for (TerminalNode terminalNode : ctx.identifierList().IDENTIFIER()) {
             ConstEntity constEntity = new ConstEntity(singleCollect.getCurrentIndex(), type, terminalNode.getText());
             constEntity.setParentId(functionIndex);
             constEntity.setLocalBlockId(localBlockId);
+
+            // update
+            constEntity.setStart(terminalNode.getSymbol());
+            constEntity.setEnd(terminalNode.getSymbol());
+            // end
+
             singleCollect.addEntity(constEntity);
             singleCollect.getEntities().get(functionIndex).addChildId(constEntity.getId());
 
@@ -528,8 +618,8 @@ public class ProcessTask {
         }
     }
 
-
-    public int processPackageDecl(String packagePath, String packageName) {
+    // update
+    public int processPackageDecl(String packagePath, String packageName,GolangParser.PackageClauseContext ctx) {
         //new packageEntity
         int packageIndex = singleCollect.getCurrentIndex();
         //System.out.println("packagePath:" + packagePath);
@@ -538,17 +628,29 @@ public class ProcessTask {
 
         AbsFLDEntity currentPackageEntity = new AbsFLDEntity(packageIndex, packagePath, packageName);
         currentPackageEntity.setParentId(-1);
+        // update
+        currentPackageEntity.setStart(ctx.getStart());
+        currentPackageEntity.setEnd(ctx.getStop());
+        // end
         singleCollect.addEntity(currentPackageEntity);
         return packageIndex;
     }
 
-    public int processFile(int packageIndex, String fileFullPath) {
+    // update
+    public int processFile(int packageIndex, String fileFullPath,GolangParser.PackageClauseContext ctx) {
         //System.out.println("fileFullPath:" + fileFullPath);
         AbsFILEntity fileEntity = new AbsFILEntity();
         fileEntity.setParentId(packageIndex);
         fileEntity.setId(singleCollect.getCurrentIndex());
         fileEntity.setName(getNewFileFullPath(fileFullPath));
         fileEntity.setSimpleName();
+
+        // update
+        fileEntity.setStart(ctx.getStart());
+        fileEntity.setEnd(ctx.getStop());
+        // end
+
+
         singleCollect.addEntity(fileEntity);
         int fileIndex = fileEntity.getId();
 
@@ -564,7 +666,8 @@ public class ProcessTask {
      * @param returns
      * @param fileIndex
      */
-    public int processFunction(String functionName, String parameters, String returns, int fileIndex) {
+    // update
+    public int processFunction(String functionName, String parameters, String returns, int fileIndex,GolangParser.FunctionDeclContext ctx) {
         ArrayList<AbsVAREntity> parameterVars = getVarFromParameters(parameters);
         ArrayList<AbsVAREntity> returnVars = getVarFromParameters(returns);
 
@@ -572,6 +675,12 @@ public class ProcessTask {
         AbsFUNEntity functionEntity = new AbsFUNEntity(functionName);
         functionEntity.setId(functionIndex);
         functionEntity.setParentId(fileIndex); //functionDecl only appear in the topLevel
+
+        // update
+        functionEntity.setStart(ctx.getStart());
+        functionEntity.setEnd(ctx.getStop());
+        // end
+
         singleCollect.addEntity(functionEntity);
 
         //set id, parentId and save into uerr, add into function's parameter
@@ -591,7 +700,8 @@ public class ProcessTask {
      * @param fileIndex
      * @return
      */
-    public int processMethod(String functionName, String receiverStr, String parameters, String returns, int fileIndex) {
+    // update
+    public int processMethod(String functionName, String receiverStr, String parameters, String returns, int fileIndex,GolangParser.MethodDeclContext ctx) {
         AbsVAREntity receiverVar = getReceiver(receiverStr);
         ArrayList<AbsVAREntity> parameterVars = getVarFromParameters(parameters);
         ArrayList<AbsVAREntity> returnVars = getVarFromParameters(returns);
@@ -600,6 +710,12 @@ public class ProcessTask {
         MethodEntity functionEntity = new MethodEntity(functionName);
         functionEntity.setId(functionIndex);
         functionEntity.setParentId(fileIndex); //MethodDecl only appear in the topLevel
+
+        // update
+        functionEntity.setStart(ctx.getStart());
+        functionEntity.setEnd(ctx.getStop());
+        // end
+
         singleCollect.addEntity(functionEntity);
 
         //set id, parentId, blockId, and save into uerr, add into function's receiver

@@ -1,5 +1,6 @@
 package uerr;
 
+import org.antlr.v4.runtime.Token;
 import util.StringUtil;
 import util.Tuple;
 
@@ -13,7 +14,31 @@ public class AbsEntity {
     protected ArrayList<Integer> childrenIds = new ArrayList<Integer>();
     protected ArrayList<Tuple<String,Integer>> relations = new ArrayList<Tuple<String, Integer>>();
 
+    // describe
+    // 从解析器ParserRuleContext 类获取start token和end token
 
+    // test
+
+    protected Token start;
+    protected Token end;
+
+    public Token getEnd() {
+        return end;
+    }
+
+    public void setEnd(Token end) {
+        this.end = end;
+    }
+
+    public Token getStart() {
+        return start;
+    }
+
+    public void setStart(Token start) {
+        this.start = start;
+    }
+
+    // end
     public String getSimpleName() {
         return simpleName;
     }

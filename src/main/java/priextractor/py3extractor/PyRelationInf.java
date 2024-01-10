@@ -1,5 +1,6 @@
 package priextractor.py3extractor;
 
+import entitybuilder.gobuilder.goentity.Location;
 import entitybuilder.pybuilder.PyConstantString;
 import uerr.*;
 import entitybuilder.pybuilder.pyentity.*;
@@ -264,6 +265,44 @@ public class PyRelationInf extends RelationInterface {
         return deps;
     }
 
+    // update
+
+    @Override
+    public ArrayList<Location> getImportDepsLocation(String level) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Location> getParmeterDepsLocation(String level) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Location> getFunctionCallsLocation(String level) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Location> getFunctionRetsLocation(String level) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Location> getFunctionUsesLocation(String level) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Location> getImplementDepsLocation(String level) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Location> getInheritDepsLocation(String level) {
+        return null;
+    }
+
+    //end
 
     /**
      * get class-inherit-class relations

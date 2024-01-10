@@ -189,6 +189,8 @@ public class GolangParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+
+	// update源文件
 	public static class SourceFileContext extends ParserRuleContext {
 		public PackageClauseContext packageClause() {
 			return getRuleContext(PackageClauseContext.class,0);
@@ -278,6 +280,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	// update
 	public static class PackageClauseContext extends ParserRuleContext {
 		public TerminalNode IDENTIFIER() { return getToken(GolangParser.IDENTIFIER, 0); }
 		public PackageClauseContext(ParserRuleContext parent, int invokingState) {
@@ -314,6 +317,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	// update
 	public static class ImportDeclContext extends ParserRuleContext {
 		public List<ImportSpecContext> importSpec() {
 			return getRuleContexts(ImportSpecContext.class);
@@ -696,6 +700,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	// update
 	public static class ConstSpecContext extends ParserRuleContext {
 		public IdentifierListContext identifierList() {
 			return getRuleContext(IdentifierListContext.class,0);
@@ -875,6 +880,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	//
 	public static class TypeDeclContext extends ParserRuleContext {
 		public List<TypeSpecContext> typeSpec() {
 			return getRuleContexts(TypeSpecContext.class);
@@ -951,6 +957,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	// update
 	public static class TypeSpecContext extends ParserRuleContext {
 		public TerminalNode IDENTIFIER() { return getToken(GolangParser.IDENTIFIER, 0); }
 		public TypeContext type() {
@@ -990,6 +997,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	// update
 	public static class FunctionDeclContext extends ParserRuleContext {
 		public TerminalNode IDENTIFIER() { return getToken(GolangParser.IDENTIFIER, 0); }
 		public FunctionContext function() {
@@ -1089,6 +1097,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	// update
 	public static class MethodDeclContext extends ParserRuleContext {
 		public ReceiverContext receiver() {
 			return getRuleContext(ReceiverContext.class,0);
@@ -1152,6 +1161,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	// update
 	public static class ReceiverContext extends ParserRuleContext {
 		public ParametersContext parameters() {
 			return getRuleContext(ParametersContext.class,0);
@@ -1188,6 +1198,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	// update
 	public static class VarDeclContext extends ParserRuleContext {
 		public List<VarSpecContext> varSpec() {
 			return getRuleContexts(VarSpecContext.class);
@@ -2023,6 +2034,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	// update
 	public static class ShortVarDeclContext extends ParserRuleContext {
 		public LeftShortVarDeclContext leftShortVarDecl() {
 			return getRuleContext(LeftShortVarDeclContext.class,0);
@@ -2258,6 +2270,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	//
 	public static class BreakStmtContext extends ParserRuleContext {
 		public TerminalNode IDENTIFIER() { return getToken(GolangParser.IDENTIFIER, 0); }
 		public BreakStmtContext(ParserRuleContext parent, int invokingState) {
@@ -2302,6 +2315,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	//
 	public static class ContinueStmtContext extends ParserRuleContext {
 		public TerminalNode IDENTIFIER() { return getToken(GolangParser.IDENTIFIER, 0); }
 		public ContinueStmtContext(ParserRuleContext parent, int invokingState) {
@@ -4009,6 +4023,7 @@ public class GolangParser extends Parser {
 		return _localctx;
 	}
 
+	// update
 	public static class InterfaceTypeContext extends ParserRuleContext {
 		public List<MethodSpecContext> methodSpec() {
 			return getRuleContexts(MethodSpecContext.class);

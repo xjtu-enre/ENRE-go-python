@@ -3,6 +3,8 @@ package formator;
 
 import formator.fjson.JBuildObject;
 import formator.fjson.JDepObject;
+import formator.fjson.NewJBuildObject;
+import formator.fjson.NewJDepObject;
 import formator.fxml.XBuildObject;
 import formator.fxml.XDepObject;
 import formator.spreadsheet.Csvgrapher;
@@ -25,13 +27,18 @@ public class Formator {
         JBuildObject jBuildObject = new JBuildObject();
         JDepObject jDepObject = jBuildObject.buildObjectProcess(mapObject);
         return jDepObject;
-
-        //JsonWriter jasonFormat = new JsonWriter();
-        //jasonFormat.toJson(jDepObject);
-
-        //XmlWriter xmlFormat = new XmlWriter();
-        //xmlFormat.toXml(xDepObject);
     }
+
+
+    // update2
+
+    public NewJDepObject getfNewJsonDataModel() {
+        NewJBuildObject newJBuildObject = new NewJBuildObject();
+        NewJDepObject newJDepObject = newJBuildObject.buildObjectProcess(mapObject);
+        return newJDepObject;
+    }
+
+    // end
 
 
 }

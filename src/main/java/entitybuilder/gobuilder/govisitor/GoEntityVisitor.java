@@ -38,6 +38,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
     packageClause : 'package' IDENTIFIER;
      */
     @Override
+    // update
     public String visitPackageClause(GolangParser.PackageClauseContext ctx) {
         if(ctx == null) {
             return null;
@@ -53,10 +54,10 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
         if (index != -1) {
             packageIndex = index;
         } else {
-            packageIndex = processTask.processPackageDecl(packagePath, packageName);
+            packageIndex = processTask.processPackageDecl(packagePath, packageName,ctx);
         }
 
-        fileIndex = processTask.processFile(packageIndex, fileFullPath);
+        fileIndex = processTask.processFile(packageIndex, fileFullPath,ctx);
         return null;
     }
 
@@ -68,10 +69,11 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
      * @return
      */
     @Override
+    // update
     public String visitImportDecl(GolangParser.ImportDeclContext ctx) {
         for (GolangParser.ImportSpecContext importSpecContext : ctx.importSpec()) {
             String importNameAndPath = visitImportSpec(importSpecContext);
-            processTask.processImport(importNameAndPath, fileIndex);
+            processTask.processImport(importNameAndPath, fileIndex,importSpecContext);
         }
         return null;
     }
@@ -117,6 +119,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
      * @return
      */
     @Override
+    // update
     public String visitConstSpec(GolangParser.ConstSpecContext ctx) {
         String type = Configure.NULL_STRING;
         if (ctx.type() != null) {
@@ -150,6 +153,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
      * @return
      */
     @Override
+    //
     public String visitVarDecl(GolangParser.VarDeclContext ctx) {
         for (GolangParser.VarSpecContext varSpecContext : ctx.varSpec()) {
             String type;
@@ -221,7 +225,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
         else if (ctx.type().typeName() != null && helperVisitor.isTopLevelDecl(ctx.getParent())) {
             String type = visitTypeName(ctx.type().typeName());
             String name = ctx.IDENTIFIER().getText();
-            processTask.processAliasType(fileIndex, type, name);
+            processTask.processAliasType(fileIndex, type, name,ctx);
         }
 
         //if it is AliasType declaration: (typeList() - slice/map/func type)
@@ -229,7 +233,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
                 && helperVisitor.isTopLevelDecl(ctx.getParent())) {
             String type = visitTypeLit(ctx.type().typeLit());
             String name = ctx.IDENTIFIER().getText();
-            processTask.processAliasType(fileIndex, type, name);
+            processTask.processAliasType(fileIndex, type, name,ctx);
         }
 
         return null;
@@ -270,7 +274,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
                         fieldType = fieldDeclContext.type().getText();
                         for (TerminalNode node : fieldDeclContext.identifierList().IDENTIFIER()) {
                             fieldName = node.getText();
-                            int fieldIndex = processTask.processStructFieldAsNormal(fieldType, fieldName);
+                            int fieldIndex = processTask.processStructFieldAsNormal(fieldType, fieldName,node);
                             tmpEntitiesIds.add(fieldIndex);
                         } //end for
                     } //end if
@@ -278,7 +282,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
                     else if (fieldDeclContext.anonymousField() != null) {
                         fieldName = GoConstantString.STRUCT_FIELD_IS_ANONYMOUS; //default
                         fieldType = visitTypeName(fieldDeclContext.anonymousField().typeName());
-                        int fieldIndex = processTask.processStructFieldAsAnonymous(fieldType, fieldName);
+                        int fieldIndex = processTask.processStructFieldAsAnonymous(fieldType, fieldName,fieldDeclContext);
                         tmpEntitiesIds.add(fieldIndex);
                     } // end else
                 } //end for
@@ -336,6 +340,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
      * @return
      */
     @Override
+    // update
     public String visitInterfaceType(GolangParser.InterfaceTypeContext ctx) {
         //it is not for interface type declaration
         if (!helperVisitor.isInterfaceypeInTypeDecl(ctx)) {
@@ -361,7 +366,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
                     if (methodSpecContext.typeName() != null) {
                         type = GoConstantString.INTERFACE_FIELD_IS_TYPE; //"TYPE"
                         name = visitTypeName(methodSpecContext.typeName());
-                        int fieldIndex = processTask.processInterfaceFieldAsType(type, name);
+                        int fieldIndex = processTask.processInterfaceFieldAsType(type, name,methodSpecContext);
                         tmpEntitiesIds.add(fieldIndex);
                     }
                     //methodDecl as a field
@@ -374,7 +379,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
                         if (methodSpecContext.signature().result() != null) {
                             methodSignatureReturns = visitResult(methodSpecContext.signature().result());
                         }
-                        int fieldIndex = processTask.processInterfaceFieldAsMethod(type, name, methodSignatureParas, methodSignatureReturns);
+                        int fieldIndex = processTask.processInterfaceFieldAsMethod(type, name, methodSignatureParas, methodSignatureReturns,methodSpecContext);
                         tmpEntitiesIds.add(fieldIndex);
                     }
                 }
@@ -1319,6 +1324,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
      * @return
      */
     @Override
+    //
     public String visitFunctionDecl(GolangParser.FunctionDeclContext ctx) {
         String functionName = ctx.IDENTIFIER().getText();
         String parameters = Configure.NULL_STRING;
@@ -1334,7 +1340,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
                 returns = visitResult(ctx.signature().result());
             }
         }
-        functionIndex = processTask.processFunction(functionName, parameters, returns, fileIndex);
+        functionIndex = processTask.processFunction(functionName, parameters, returns, fileIndex,ctx);
         blockStackForAFuncMeth.clear();
 
         if (ctx.function() != null) {
@@ -1356,6 +1362,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
      * @return
      */
     @Override
+    // update
     public String visitMethodDecl(GolangParser.MethodDeclContext ctx) {
         if(ctx == null) {
             return null;
@@ -1382,7 +1389,8 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
                 returns = visitResult(ctx.signature().result());
             }
         }
-        functionIndex =  processTask.processMethod(functionName, receiverStr, parameters, returns, fileIndex);
+        System.out.println();
+        functionIndex =  processTask.processMethod(functionName, receiverStr, parameters, returns, fileIndex,ctx);
         blockStackForAFuncMeth.clear();
 
         if (ctx.function() != null) {
@@ -1419,6 +1427,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
      * @return
      */
     @Override
+    // update
     public String visitShortVarDecl(GolangParser.ShortVarDeclContext ctx) {
         String leftOperands = visitLeftShortVarDecl(ctx.leftShortVarDecl());
         String rightExps = visitRightShortVarDecl(ctx.rightShortVarDecl());
@@ -1427,7 +1436,7 @@ public class GoEntityVisitor extends GolangBaseVisitor<String> {
             if (!blockStackForAFuncMeth.isEmpty()) {
                 localBlockId = blockStackForAFuncMeth.peek();
             }
-            processTask.processShortDeclVarInFunction(leftOperands, rightExps, functionIndex, localBlockId);
+            processTask.processShortDeclVarInFunction(leftOperands, rightExps, functionIndex, localBlockId,ctx);
         }
         return (leftOperands + Configure.STRING_COLON + Configure.EQUAL + rightExps);
     }

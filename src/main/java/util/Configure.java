@@ -112,12 +112,22 @@ public class Configure {
     private String outputCsvNodeFile = analyzedProjectName + "_node.csv";
     private String outputCsvEdgeFile = analyzedProjectName + "_edge.csv";
     private String outputJsonFile = analyzedProjectName  + "_dep.json";
+
+    // update2
+    private String outputNewJsonFile = analyzedProjectName + "_entity.json";
+    // end
+
     private String outputXmlFile = analyzedProjectName + "_dep.xml";
     private String attributeName = analyzedProjectName + "-sdsm";
     private String schemaVersion = "1.0";
 
     public void setDefault() {
         outputJsonFile = analyzedProjectName  + "_dep.json";
+
+        // update2
+        outputNewJsonFile = analyzedProjectName + "_entity.json";
+        // end
+
         outputDotFile = analyzedProjectName + ".dot";
         outputXmlFile = analyzedProjectName + "_dep.xml";
         outputCsvNodeFile = analyzedProjectName + "_node.csv";
@@ -125,6 +135,18 @@ public class Configure {
         attributeName = analyzedProjectName + "-sdsm";
     }
 
+    // update2
+
+
+    public String getOutputNewJsonFile() {
+        return outputNewJsonFile;
+    }
+
+    public void setOutputNewJsonFile(String outputNewJsonFile) {
+        this.outputNewJsonFile = outputNewJsonFile;
+    }
+
+    // end
     public String getInputSrcPath() {
         return inputSrcPath;
     }

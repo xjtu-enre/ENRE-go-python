@@ -1,6 +1,7 @@
 package writer;
 
 import formator.fjson.JDepObject;
+import formator.fjson.NewJDepObject;
 import formator.fxml.XDepObject;
 import util.Configure;
 
@@ -9,6 +10,12 @@ import java.util.ArrayList;
 public class WriterIntf {
 
     Configure configure = Configure.getConfigureInstance();
+
+    public void run(NewJDepObject newJDepObject) {
+        JsonWriter jsonWriter = new JsonWriter();
+        jsonWriter.toJson(newJDepObject,configure.getOutputNewJsonFile());
+        System.out.println("Export "+ configure.getOutputNewJsonFile());
+    }
 
     public void run(JDepObject jDepObject, XDepObject xDepObject, ArrayList<String[]> nodes, ArrayList<String[]> edges) {
 

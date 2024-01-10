@@ -4,6 +4,7 @@ import uerr.*;
 import util.Configure;
 import util.Tuple;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -11,8 +12,12 @@ public class HiDeper {
     private HiDepData hiDepData = HiDepData.getInstance();
     private SingleCollect singleCollect = SingleCollect.getSingleCollectInstance();
 
+    // test
+    private ArrayList<AbsEntity> test_entities = new ArrayList<AbsEntity>();
+
 
     public void run() {
+        test_entities = singleCollect.getEntities();
         for(AbsEntity entity : singleCollect.getEntities()) {
             buildEntity(entity.getId(), getEntityType(entity));
             buildDep(entity);

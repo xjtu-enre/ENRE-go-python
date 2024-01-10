@@ -49,7 +49,7 @@ public class BuilderIntf {
     }
 
 
-
+    // custom_visit
     public void run(){
         FileUtil fileUtil = new FileUtil(configure.getInputSrcPath());
         for (String fileFullPath : fileUtil.getFileNameList(configure.getCurr_pro_suffix())) {
