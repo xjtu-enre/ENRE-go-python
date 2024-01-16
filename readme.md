@@ -78,6 +78,13 @@ $java -jar ENRE-v1.0.jar  golang  demo-projects\beego   github.com/astaxie/beego
 ```
 After analysis, ENRE finally outputs the resovled entities and dependencies in **JSON**, **XML**, **DOT** files in new-generated **beego-out/** directory.
 
+After v2.0, ENRE can selectively output all entities rather than file-level entities. For that target, you should change your input message.
+
+$args: golang demo-projects/beego github.com/astaxie/beego beego 111111111 11/01/10
+
+For the above parameters explained, "111111111" orders ENRE to analyze all dependency types and "11" can order ENRE to output the file-level entities and all entities, "10" can order ENRE to output the file-level entities but not all entities.
+
+notes: _entity.json, all entity information is stored. _dep.json, all file-level entity information is stored.
 
 # References
 

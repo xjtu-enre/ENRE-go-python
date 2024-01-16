@@ -30,11 +30,34 @@ public class NewJBuildObject {
         // end
     }
 
+    // update 2.2
+    private AbsEntity findparent(int id,SingleCollect singleCollect) {
+        for(AbsEntity entity : singleCollect.getEntities()) {
+            if (entity.getId() == id) {
+                return entity;
+            }
+        }
+        return null;
+    }
+    // end
+
     private ArrayList<JEntityObject> buildEntityObjects(SingleCollect singleCollect) {
         ArrayList<JEntityObject> entities = new ArrayList<JEntityObject>();
         for(AbsEntity entity : singleCollect.getEntities()) {
             JEntityObject jEntityObject = new JEntityObject();
             jEntityObject.setId(entity.getId());
+
+            // update 2.2
+            String qualifyname = entity.getSimpleName();
+            AbsEntity qentity = entity;
+            if (qentity.getParentId() != -1) {
+                while((qentity = findparent(qentity.getParentId(),singleCollect)) != null) {
+                    qualifyname = qentity.getSimpleName() + '.' +qualifyname;
+                }
+            }
+            jEntityObject.setQualifyname(qualifyname);
+            // end
+
             jEntityObject.setName(entity.getSimpleName());
             jEntityObject.setParent(entity.getParentId());
             Map<String,JLocation> identifier = new HashMap<String, JLocation>();
@@ -58,28 +81,20 @@ public class NewJBuildObject {
             identifier.put("end",end);
             jEntityObject.setIdentifier(identifier);
             if (entity instanceof AbsFILEntity) {
-                // *
                 jEntityObject.setCategory("FILE");
             } else if (entity instanceof InterfaceEntity) {
-                // *
                 jEntityObject.setCategory("Interface");
             } else if (entity instanceof StructEntity) {
-                // *
                 jEntityObject.setCategory("struct");
             } else if(entity instanceof AliasTypeEntity) {
-                // *
                 jEntityObject.setCategory("alias");
             } else if (entity instanceof AbsFLDEntity) {
-                // *
                 jEntityObject.setCategory("Package");
             } else if ((entity instanceof AbsFUNEntity) && !(entity instanceof MethodEntity)) {
-                // *
                 jEntityObject.setCategory("Func");
             } else if (entity instanceof MethodEntity) {
-                // *
                 jEntityObject.setCategory("Method");
             } else if (entity instanceof AbsVAREntity) {
-                // *
                 int parentId = entity.getParentId();
                 if(parentId != -1) {
                     if(!(singleCollect.getEntities().get(parentId) instanceof StructEntity)) {

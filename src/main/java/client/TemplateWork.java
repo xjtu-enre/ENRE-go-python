@@ -30,12 +30,21 @@ public class TemplateWork {
         String usageDir = args[2];
         String projectName = usageDir;
         String depMask = "111111111";
+        // update 2.2
+        String choice = "11";
+        // end
         if (args.length > 3) {
             projectName = args[3];
         }
         if (args.length > 4) {
             depMask = args[4];
         }
+        // update 2.2
+        if (args.length > 5) {
+            choice = args[5];
+        }
+        // end
+
 
         config(lang, inputDir, usageDir, projectName);
         String[] depTypes = getDepType(depMask);
@@ -62,28 +71,33 @@ public class TemplateWork {
         Formator formator = new Formator(depTypes);
         JDepObject jDepObject = formator.getfJsonDataModel();
         XDepObject xDepObject = formator.getfXmlDataModel();
-        // update2
-
-        NewJDepObject newJDepObject = formator.getfNewJsonDataModel();
-
         // end
+        // update 2.2
         Csvgrapher csvgrapher = new Csvgrapher();
         csvgrapher.buildProcess();
         ArrayList<String[]> allNodes = csvgrapher.getNodes();
         ArrayList<String[]> allEdges = csvgrapher.getEdges();
-
         WriterIntf writer = new WriterIntf();
-        writer.run(jDepObject, xDepObject, allNodes, allEdges);
-
         // update2
-        writer.run(newJDepObject);
+
+        NewJDepObject newJDepObject = formator.getfNewJsonDataModel();
+
+        if (choice.equals("11")) {
+            writer.run(jDepObject, xDepObject, allNodes, allEdges);
+            writer.run(newJDepObject);
+        } else if (choice.equals("01")) {
+            writer.run(newJDepObject);
+        } else if (choice.equals("10")) {
+            writer.run(jDepObject, xDepObject, allNodes, allEdges);
+        } else {
+            System.out.println("---------------------");
+            System.out.println("args[5]: Wrong input");
+        }
+
         // end
 
         //output the summary of the acquired results.
         summary();
-
-        //the followings are for experiments
-        //generateDataForExperiments(writer);
 
     }
 

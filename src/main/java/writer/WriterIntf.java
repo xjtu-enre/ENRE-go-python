@@ -49,21 +49,6 @@ public class WriterIntf {
         dotWriter.writeDot(DotUtil.FILTER_FUNC_CLASS_DEP, fileName4);
         dotWriter.writeDot(DotUtil.FILTER_FUNCTION_DEP, fileName5);
         dotWriter.writeDot(DotUtil.FILTER_DEFAULT_DEP, fileName6);
-
-        /*Render render = new Render();
-        String destFileName1 = Configure.getConfigureInstance().getAnalyzedProjectName() + "_" + DotUtil.FILTER_NO_DEP + ".svg";
-        String destFileName2 = Configure.getConfigureInstance().getAnalyzedProjectName() + "_" + DotUtil.FILTER_FILE_FOLDER_DEP + ".svg";
-        String destFileName3 = Configure.getConfigureInstance().getAnalyzedProjectName() + "_" + DotUtil.FILTER_CLASS_DEP + ".svg";
-        String destFileName4 = Configure.getConfigureInstance().getAnalyzedProjectName() + "_" + DotUtil.FILTER_FUNC_CLASS_DEP + ".svg";
-        String destFileName5 = Configure.getConfigureInstance().getAnalyzedProjectName() + "_" + DotUtil.FILTER_FUNCTION_DEP + ".svg";
-        String destFileName6 = Configure.getConfigureInstance().getAnalyzedProjectName() + "_" + DotUtil.FILTER_DEFAULT_DEP + ".svg";
-
-        render.run(fileName1, "fdp", destFileName1, "svg");
-        render.run(fileName1, "fdp", destFileName2, "svg");
-        render.run(fileName1, "fdp", destFileName3, "svg");
-        render.run(fileName1, "fdp", destFileName4, "svg");
-        render.run(fileName1, "fdp", destFileName5, "svg");
-        render.run(fileName1, "fdp", destFileName6, "svg");*/
     }
 
     public void undTest() {

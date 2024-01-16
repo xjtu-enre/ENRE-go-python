@@ -14,9 +14,22 @@ public class JEntityObject {
 
     private int id;
     private String name;
+
+    // update 2.2
+    private String qualifyname;
+    // end
+
     private int parent;
     private String category;
     private Map<String,JLocation> identifier;
+
+    public String getQualifyname() {
+        return qualifyname;
+    }
+
+    public void setQualifyname(String qualifyname) {
+        this.qualifyname = qualifyname;
+    }
 
     public int getId() {
         return id;
